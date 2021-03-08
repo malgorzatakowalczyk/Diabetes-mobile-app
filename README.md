@@ -1,16 +1,16 @@
-# flutter_app
 
-A new Flutter application.
+# Aplikacja dla diabetyków
+![APLIKACJA DLA DIABETYKÓW(1)](https://user-images.githubusercontent.com/72406032/110367505-0a13c300-8048-11eb-933f-593a91995d79.png)
 
-## Getting Started
+## Opis:
+Aplikacja dla diabetyków pozwalająca na zapisywanie i monitorowanie poziomu cukru. Dodane wpisy możemy modyfikować, usuwać a także filtrować na podstawie daty tak aby sprawdzić rekordy z poszczególnego dnia. Dodatkowo aplikacja umożliwia prześledzenie maksymalnej, minimalnej i średniej wartości w ostatnim dniu, tygodniu i miesiącu. Zaimplementowane są również algorytmy wyliczające wskaźniki BMI, HOMA-IR a także algorytmy pozwalające przeliczenie jednostek glikemii.
 
-This project is a starting point for a Flutter application.
+## Działanie aplikacji 
+Dokładniejsze działanie przedstawione jest na screenach i filmie w folderze preview
 
-A few resources to get you started if this is your first Flutter project:
+## Technologie:
+<ul>
+  <li>Dart, Flutter</li>
+  <li>SQLite</li>
+  </ul>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
