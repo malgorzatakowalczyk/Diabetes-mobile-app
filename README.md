@@ -12,5 +12,6 @@ Dokładniejsze działanie przedstawione jest na screenach i filmie w folderze pr
 <ul>
   <li>Dart, Flutter</li>
   <li>SQLite</li>
+  <li>IDE: Android Studio</li>
   </ul>
 
