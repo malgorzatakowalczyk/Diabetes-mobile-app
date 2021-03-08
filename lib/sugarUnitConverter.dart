@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Demo3 extends StatefulWidget {
+class SugarUnitConverter extends StatefulWidget {
   @override
-  _DemoState createState() => _DemoState();
+  _SugarUnitConverterState createState() => _SugarUnitConverterState();
 }
 
-class _DemoState extends State<Demo3> {
+class _SugarUnitConverterState extends State<SugarUnitConverter> {
   final TextEditingController _unit1Controller = TextEditingController();
   final TextEditingController _unit2Controller = TextEditingController();
 
   String _comment;
-  double result=0;
+  double result = 0;
+  Color darkPink=Colors.pink[800];
+  Color pink=Colors.pink[600];
+
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class _DemoState extends State<Demo3> {
       appBar: AppBar(
         title: Text('Przelicznik jednostek cukru'),
         centerTitle: true,
-        backgroundColor: Colors.pink[800],
+        backgroundColor: darkPink,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -35,8 +38,7 @@ class _DemoState extends State<Demo3> {
             ),
             SizedBox(height: 15),
             RaisedButton(
-              color: Colors.pink[600],
-             // color: Colors.pinkAccent,
+              color: pink,
               child: Text(
                 "Przelicz",
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -53,8 +55,7 @@ class _DemoState extends State<Demo3> {
             ),
             SizedBox(height: 15),
             RaisedButton(
-              color: Colors.pink[600],
-             // color: Colors.pinkAccent,
+              color: pink,
               child: Text(
                 "Przelicz",
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -68,7 +69,9 @@ class _DemoState extends State<Demo3> {
               child: RaisedButton(
                 color: Colors.white,
                 child: Text(
-                  _comment == null ? "Uzupełnij brakujące wartości" : "$_comment",
+                  _comment == null
+                      ? "Uzupełnij brakujące wartości"
+                      : "$_comment",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -85,24 +88,20 @@ class _DemoState extends State<Demo3> {
     );
   }
 
-  void calculateUnit1ToUnit2()
-  {
-    if(_unit1Controller.text!="") {
+  void calculateUnit1ToUnit2() {
+    if (_unit1Controller.text != "") {
       double unit2 = double.parse(_unit1Controller.text);
       result = unit2 / 18;
-
       String resultStr = result.toStringAsFixed(2);
       _comment = "$resultStr mmol/L";
-
       setState(() {});
     }
   }
-  void calculateUnit2ToUnit1()
-  {
-    if(_unit2Controller.text!="") {
+
+  void calculateUnit2ToUnit1() {
+    if (_unit2Controller.text != "") {
       double unit1 = double.parse(_unit2Controller.text);
       result = unit1 * 18;
-
       String resultStr = result.toStringAsFixed(2);
       _comment = "$resultStr mg/dL";
       setState(() {});

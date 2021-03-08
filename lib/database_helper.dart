@@ -2,7 +2,9 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'todo.dart';
+import 'record.dart';
+import 'package:intl/intl.dart';
+
 
 class DatabaseHelper {
 
@@ -17,6 +19,10 @@ class DatabaseHelper {
   String colHour='hour';
   String colLevelOfSugar='levelOfSugar';
 
+  int avgToday=0;
+  int maxToday=0;
+  int minToday=0;
+  int avgWeek=0;
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
   factory DatabaseHelper() {
@@ -61,20 +67,20 @@ class DatabaseHelper {
   }
 
   // Insert Operation: Insert a todo object to database
-  Future<int> insertTodo(Todo todo) async {
+  Future<int> insertTodo(Record todo) async {
     Database db = await this.database;
     var result = await db.insert(todoTable, todo.toMap());
     return result;
   }
 
   // Update Operation: Update a todo object and save it to database
-  Future<int> updateTodo(Todo todo) async {
+  Future<int> updateTodo(Record todo) async {
     var db = await this.database;
     var result = await db.update(todoTable, todo.toMap(), where: '$colId = ?', whereArgs: [todo.id]);
     return result;
   }
 
-  Future<int> updateTodoCompleted(Todo todo) async {
+  Future<int> updateTodoCompleted(Record todo) async {
     var db = await this.database;
     var result = await db.update(todoTable, todo.toMap(), where: '$colId = ?', whereArgs: [todo.id]);
     return result;
@@ -95,21 +101,123 @@ class DatabaseHelper {
     return result;
   }
 
+
   // Get the 'Map List' [ List<Map> ] and convert it to 'todo List' [ List<Todo> ]
-  Future<List<Todo>> getTodoList() async {
+  Future<List<Record>> getTodoList() async {
 
     var todoMapList = await getTodoMapList(); // Get 'Map List' from database
     int count = todoMapList.length;         // Count the number of map entries in db table
 
-    List<Todo> todoList = List<Todo>();
+    List<Record> todoList = List<Record>();
     // For loop to create a 'todo List' from a 'Map List'
     for (int i = 0; i < count; i++) {
-      todoList.add(Todo.fromMapObject(todoMapList[i]));
+      todoList.add(Record.fromMapObject(todoMapList[i]));
     }
 
     return todoList;
   }
 
+
+///Get list depends date
+  ///
+  ///
+  ///
+  ///
+  Future<List<Map<String, dynamic>>> getTodoMapListDate(String mess) async {
+    Database db = await this.database;
+    var result = await db.rawQuery('SELECT * FROM $todoTable where $colDate like \'$mess\' order by $colTitle ASC');
+    return result;
+  }
+
+  Future<List<Record>> getTodoListDate(String mess) async {
+
+    var todoMapList = await getTodoMapListDate(mess); // Get 'Map List' from database
+    int count = todoMapList.length;         // Count the number of map entries in db table
+
+    List<Record> todoList = List<Record>();
+    // For loop to create a 'todo List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      todoList.add(Record.fromMapObject(todoMapList[i]));
+    }
+
+    return todoList;
+  }
+
+  //lista z 1 dnia
+  Future<List<Map<String, dynamic>>> getTodoMapListFromToday(DateTime day) async {
+    Database db = await this.database;
+    DateFormat dateFormat = DateFormat("dd.MM.yyyy");
+   // DateTime now=DateTime.now();
+    String mess=dateFormat.format(day);
+    var result = await db.rawQuery('SELECT * FROM $todoTable where $colDate like \'$mess\'');
+    return result;
+  }
+  Future<List<Record>> getTodoListFromToday(DateTime day) async {
+
+    double avgTodaySum=0;
+    maxToday=0;
+    minToday=0;
+    var todoMapList = await getTodoMapListFromToday(day); // Get 'Map List' from database
+    int count = todoMapList.length;         // Count the number of map entries in db table
+    List<Record> todoList = List<Record>();
+    if(count!=0) {
+      maxToday = Record.fromMapObject(todoMapList[0]).levelOfSugar;
+      minToday= Record.fromMapObject(todoMapList[0]).levelOfSugar;
+    }
+    for (int i = 0; i < count; i++) {
+      if(Record.fromMapObject(todoMapList[i]).levelOfSugar>maxToday)
+        maxToday=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+      if(Record.fromMapObject(todoMapList[i]).levelOfSugar<minToday)
+        minToday=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+      todoList.add(Record.fromMapObject(todoMapList[i]));
+      avgTodaySum+=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+    }
+    if(avgTodaySum!=0) avgTodaySum=avgTodaySum/count;
+    avgToday=avgTodaySum.toInt();
+    return todoList;
+  }
+
+
+  Future<List<Record>> getTodoListFromWeek(DateTime day) async {
+
+    double avgTodaySum=0;
+    maxToday=0;
+    minToday=0;
+    var todoMapList = await getTodoMapListFromToday(day); // Get 'Map List' from database
+    int count = todoMapList.length;         // Count the number of map entries in db table
+    List<Record> todoList = List<Record>();
+    if(count!=0) {
+      maxToday = Record.fromMapObject(todoMapList[0]).levelOfSugar;
+      minToday= Record.fromMapObject(todoMapList[0]).levelOfSugar;
+    }
+    for (int i = 0; i < count; i++) {
+      if(Record.fromMapObject(todoMapList[i]).levelOfSugar>maxToday)
+        maxToday=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+      if(Record.fromMapObject(todoMapList[i]).levelOfSugar<minToday)
+        minToday=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+      todoList.add(Record.fromMapObject(todoMapList[i]));
+      avgTodaySum+=Record.fromMapObject(todoMapList[i]).levelOfSugar;
+    }
+    if(avgTodaySum!=0) avgTodaySum=avgTodaySum/count;
+    avgWeek=avgTodaySum.toInt();
+    return todoList;
+  }
+  int getAverageWeek()
+  {
+    return avgWeek;
+  }
+  int getAverageToday()
+  {
+    return avgToday;
+  }
+  int getMaxValue()
+  {
+    return maxToday;
+  }
+  int getMinValue()
+  {
+    return minToday;
+  }
 }
 
 

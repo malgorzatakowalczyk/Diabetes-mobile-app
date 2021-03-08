@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
-class Demo extends StatefulWidget {
+class BmiCalculator extends StatefulWidget {
   @override
-  _DemoState createState() => _DemoState();
+  _BmiCalculatorState createState() => _BmiCalculatorState();
 }
 
-class _DemoState extends State<Demo> {
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+class _BmiCalculatorState extends State<BmiCalculator> {
   String _comment;
-  Color color=Colors.white;
-  double _value = 0.0;
-  void _setvalue(double value) => setState(() => _value = value);
-
+  Color colorOfButton = Colors.white;
+  Color darkPink=Colors.pink[800];
+  Color pink=Colors.pink[600];
+  double height = 1, weight = 1, age = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -21,51 +18,58 @@ class _DemoState extends State<Demo> {
       appBar: AppBar(
         title: Text('BMI Calculator'),
         centerTitle: true,
-        backgroundColor: Colors.pink[800],
+        backgroundColor: darkPink,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: _heightController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "Podaj wzrost w cm",
-                icon: Icon(Icons.trending_up),
-              ),
+            new Text('Podaj wzrost [cm]:'),
+            Slider(
+              activeColor: pink,
+              value: height,
+              min: 0,
+              max: 250,
+              divisions: 250,
+              label: height.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  height = value;
+                });
+              },
             ),
-            SizedBox(height: 15),
-            TextField(
-              controller: _weightController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-               // labelText: 'Podaj wagę w kg',
-                hintText: "Podaj wagę w kg",
-                icon: Icon(Icons.line_weight),
-              ),
+            new Text('Podaj wage [kg]:'),
+            Slider(
+              activeColor: pink,
+              value: weight,
+              min: 0,
+              max: 250,
+              divisions: 250,
+              label: weight.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  weight = value;
+                });
+              },
             ),
-            SizedBox(height: 15),
-            /*Column(
-              children: <Widget>[
-                new Text('Podaj wiek: ${(_value * 200).round()}'),
-                new Slider(value: _value, onChanged: _setvalue)
-              ],
-            ),*/
-            TextField(
-              controller: _ageController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-               // labelText: 'Podaj wiek',
-                hintText: "Podaj wiek",
-                icon: Icon(Icons.face),
-              ),
+            new Text('Podaj wiek:'),
+            Slider(
+              activeColor: pink,
+              value: age,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: age.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  age = value;
+                });
+              },
             ),
             SizedBox(height: 15),
             RaisedButton(
-              color: Colors.pink[600],
-              //color: Colors.pinkAccent,
+              color: pink,
               child: Text(
                 "Sprawdź",
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -77,9 +81,11 @@ class _DemoState extends State<Demo> {
               width: 300,
               height: 100,
               child: RaisedButton(
-                color: color,
+                color: colorOfButton,
                 child: Text(
-                  _comment == null ? "Uzupełnij brakujące wartości" : "$_comment",
+                  _comment == null
+                      ? "Uzupełnij brakujące wartości"
+                      : "$_comment",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -97,59 +103,46 @@ class _DemoState extends State<Demo> {
   }
 
   void calculateBMI() {
-    if (_heightController.text != "" && _weightController.text != "" &&
-        _ageController.text != "") {
-      double height = double.parse(_heightController.text) / 100;
-      double weight = double.parse(_weightController.text);
-      int age = int.parse(_ageController.text);
 
-      double heightSquare = height * height;
-      double result = weight / heightSquare;
-      String resultStr = result.toStringAsFixed(2);
-      if (age < 18) {
-        _comment = "Wskaźnik BMI przeznaczony jest dla osób dorosłych";
-        color = Colors.cyanAccent;
+    height /= 100;
+    double heightSquare = height * height;
+    double result = weight / heightSquare;
+    String resultStr = result.toStringAsFixed(2);
+    int ageBMI = age.toInt();
+
+    if (ageBMI < 18) {
+      _comment = "Wskaźnik BMI przeznaczony jest dla osób dorosłych";
+      colorOfButton = Colors.cyanAccent;
+    } else {
+      if (result < 16) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na wygłodzenię";
+        colorOfButton = Colors.redAccent;
+      } else if (result >= 16 && result < 17) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na wychudzenię";
+        colorOfButton = Colors.orangeAccent;
+      } else if (result >= 17 && result < 18.5) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na niedowagę";
+        colorOfButton = Colors.yellowAccent;
+      } else if (result >= 18.5 && result < 25) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na prawidłową wagę";
+        colorOfButton = Colors.lightGreenAccent;
+      } else if (result >= 25 && result < 30) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na nadwagę";
+        colorOfButton = Colors.yellowAccent;
+      } else if (result >= 30 && result < 35) {
+        _comment =
+            "Twoje bmi wynosi $resultStr i wskazuje na otyłość pierwszego stopnia";
+        colorOfButton = Colors.orangeAccent;
+      } else if (result >= 35 && result < 40) {
+        _comment =
+            "Twoje bmi wynosi $resultStr i wskazuje na otyłość drugiego stopnia";
+        colorOfButton = Colors.redAccent;
+      } else if (result >= 40) {
+        _comment = "Twoje bmi wynosi $resultStr i wskazuje na skrajną otyłość";
+        colorOfButton = Colors.redAccent;
       }
-      else {
-        // _result = result;
-        if (result < 16) {
-          _comment = "Twoje bmi wynosi $resultStr i wskazuje na wygłodzenię";
-          color = Colors.redAccent;
-        }
-        else if (result >= 16 && result < 17) {
-          _comment = "Twoje bmi wynosi $resultStr i wskazuje na wychudzenię";
-          color = Colors.orangeAccent;
-        }
-        else if (result >= 17 && result < 18.5) {
-          _comment = "Twoje bmi wynosi $resultStr i wskazuje na niedowagę";
-          color = Colors.yellowAccent;
-        }
-        else if (result >= 18.5 && result < 25) {
-          _comment =
-          "Twoje bmi wynosi $resultStr i wskazuje na prawidłową wagę";
-          color = Colors.lightGreenAccent;
-        }
-        else if (result >= 25 && result < 30) {
-          _comment = "Twoje bmi wynosi $resultStr i wskazuje na nadwagę";
-          color = Colors.yellowAccent;
-        }
-        else if (result >= 30 && result < 35) {
-          _comment =
-          "Twoje bmi wynosi $resultStr i wskazuje na otyłość pierwszego stopnia";
-          color = Colors.orangeAccent;
-        }
-        else if (result >= 35 && result < 40) {
-          _comment =
-          "Twoje bmi wynosi $resultStr i wskazuje na otyłość drugiego stopnia";
-          color = Colors.redAccent;
-        }
-        else if (result >= 40) {
-          _comment =
-          "Twoje bmi wynosi $resultStr i wskazuje na skrajną otyłość";
-          color = Colors.redAccent;
-        }
-      }
-      setState(() {});
     }
+    height = height * 100;
+    setState(() {});
   }
 }

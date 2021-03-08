@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Demo2 extends StatefulWidget {
+class HomairCalculator extends StatefulWidget {
   @override
-  _DemoState createState() => _DemoState();
+  _HomairCalculatorState createState() => _HomairCalculatorState();
 }
 
-class _DemoState extends State<Demo2> {
+class _HomairCalculatorState extends State<HomairCalculator> {
   final TextEditingController _insulinController = TextEditingController();
   final TextEditingController _glucoseController = TextEditingController();
 
   String _comment;
-  Color color=Colors.white;
+  Color colorOfButton = Colors.white;
+  Color darkPink = Colors.pink[800];
+  Color pink = Colors.pink[600];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class _DemoState extends State<Demo2> {
       appBar: AppBar(
         title: Text('HOMA-IR'),
         centerTitle: true,
-        backgroundColor: Colors.pink[800],
+        backgroundColor: darkPink,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -29,8 +31,7 @@ class _DemoState extends State<Demo2> {
               controller: _insulinController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-               // hintText: "Insulina na czczo mU/ml",
-                icon: Icon(Icons.trending_up),
+                icon: Icon(Icons.medical_services_outlined),
                 labelText: 'Insulina na czczo mU/ml',
               ),
             ),
@@ -40,14 +41,12 @@ class _DemoState extends State<Demo2> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Glukoza na czczo mmol/l',
-                //hintText: "Glukoza na czczo mmol/l",
-                icon: Icon(Icons.line_weight),
+                icon: Icon(Icons.medical_services),
               ),
             ),
             SizedBox(height: 15),
             RaisedButton(
-              color: Colors.pink[600],
-              //color: Colors.pinkAccent,
+              color: pink,
               child: Text(
                 "Sprawdź",
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -59,9 +58,11 @@ class _DemoState extends State<Demo2> {
               width: 300,
               height: 100,
               child: RaisedButton(
-                color: color,
+                color: colorOfButton,
                 child: Text(
-                  _comment == null ? "Uzupełnij brakujące wartości" : "$_comment",
+                  _comment == null
+                      ? "Uzupełnij brakujące wartości"
+                      : "$_comment",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -87,19 +88,16 @@ class _DemoState extends State<Demo2> {
       String resultStr = result.toStringAsFixed(2);
       if (result < 1) {
         _comment = "Wskaźnik wynosi $resultStr. Wyniki prawidłowe.";
-        color = Colors.lightGreenAccent;
-      }
-      else if (result >= 1 && result < 2) {
+        colorOfButton = Colors.lightGreenAccent;
+      } else if (result >= 1 && result < 2) {
         _comment =
-        "Wskaźnik wynosi $resultStr. Konieczna jest dalsza diagnostyka u lekarza";
-        color = Colors.yellowAccent;
-      }
-      else if (result >= 2) {
+            "Wskaźnik wynosi $resultStr. Konieczna jest dalsza diagnostyka u lekarza";
+        colorOfButton = Colors.yellowAccent;
+      } else if (result >= 2) {
         _comment =
-        "Wskaźnik wynosi $resultStr. Może to świadczyć o insulinooporności";
-        color = Colors.redAccent;
+            "Wskaźnik wynosi $resultStr. Może to świadczyć o insulinooporności";
+        colorOfButton = Colors.redAccent;
       }
-
       setState(() {});
     }
   }

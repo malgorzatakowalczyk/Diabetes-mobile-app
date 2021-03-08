@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'bmiCalculator.dart';
 import 'homairCalculator.dart';
 import 'sugarUnitConverter.dart';
-import 'todo_list.dart';
-import 'todo_details.dart';
-import 'statistic.dart';
+import 'listOfSugarLevels.dart';
+import 'average.dart';
 
-
-import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,7 +20,6 @@ class FirstRoute extends StatelessWidget {
         title: Text('Diabetycy'),
         centerTitle: true,
         backgroundColor: Colors.pink[800],
-        //backgroundColor: Colors.pinkAccent,
       ),
       body: Container(
       decoration: new BoxDecoration(
@@ -33,21 +29,18 @@ class FirstRoute extends StatelessWidget {
     ),
       ),
         alignment: Alignment.center,
-       //padding: EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-          //  SizedBox(height: 25),
         RaisedButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0),
             side: BorderSide(color: Colors.pink[600])),
-         // side: BorderSide(color: Colors.pinkAccent)),
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => TodoList()),
+          MaterialPageRoute(builder: (context) => ListOfSugarLevels()),
         );
       },
       padding: EdgeInsets.all(20.0),
@@ -66,7 +59,7 @@ class FirstRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Demo()),
+                  MaterialPageRoute(builder: (context) => BmiCalculator()),
                 );
               },
               padding: EdgeInsets.all(20.0),
@@ -85,7 +78,7 @@ class FirstRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Demo2()),
+                  MaterialPageRoute(builder: (context) => HomairCalculator()),
                 );
               },
               padding: EdgeInsets.all(20.0),
@@ -105,7 +98,7 @@ class FirstRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Demo3()),
+                  MaterialPageRoute(builder: (context) => SugarUnitConverter()),
                 );
               },
               padding: EdgeInsets.all(20.0),
@@ -125,7 +118,7 @@ class FirstRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LineChartSample2()),
+                  MaterialPageRoute(builder: (context) => Demo6()),
                 );
               },
               padding: EdgeInsets.all(20.0),
@@ -134,7 +127,8 @@ class FirstRoute extends StatelessWidget {
               textColor: Colors.white,
               child: Text("Statystyki                    ",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20)),
+                  style: TextStyle(fontSize: 20
+                  )),
             ),
 
           ],
