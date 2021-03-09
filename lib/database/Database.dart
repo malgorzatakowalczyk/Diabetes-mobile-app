@@ -3,31 +3,27 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
-// database table and column names
-final String tableWords = 'wegle5';
+final String tableInDatabase = 'informationAboutSugarLevel';
 final String columnId = 'id';
 final String columnMeal = 'typeOfMeal';
 final String columnSugarLevel = 'sugarLevel';
-final String columnDate='date';
-// data model class
-class Word {
+final String columnDate = 'date';
 
+class LineInDatabase {
   int id;
   String typeOfMeal;
   int sugarLevel;
   String date;
 
-  Word();
+  LineInDatabase();
 
-  // convenience constructor to create a Word object
-  Word.fromMap(Map<String, dynamic> map) {
+  LineInDatabase.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
     typeOfMeal = map[columnMeal];
     sugarLevel = map[columnSugarLevel];
-    date=map[columnDate];
+    date = map[columnDate];
   }
 
-  // convenience method to create a Map from this Word object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnMeal: typeOfMeal,
@@ -41,41 +37,32 @@ class Word {
   }
 }
 
-// singleton class to manage the database
 class DatabaseHelper {
-
-  // This is the actual database filename that is saved in the docs directory.
-  static final _databaseName = "MyDatabase3.db";
-  // Increment this version when you need to change the schema.
+  static final _databaseName = "DatabaseDiabetesApp.db";
   static final _databaseVersion = 1;
 
-  // Make this a singleton class.
   DatabaseHelper._privateConstructor();
+
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
-  // Only allow a single open connection to the database.
   static Database _database;
+
   Future<Database> get database async {
     if (_database != null) return _database;
     _database = await _initDatabase();
     return _database;
   }
 
-  // open the database
   _initDatabase() async {
-    // The path_provider plugin gets the right directory for Android or iOS.
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
-    // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: _onCreate);
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
-  // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-              CREATE TABLE $tableWords (
+              CREATE TABLE $tableInDatabase (
                 $columnId INTEGER PRIMARY KEY,
                 $columnMeal TEXT NOT NULL,
                 $columnSugarLevel INTEGER NOT NULL,
@@ -84,27 +71,19 @@ class DatabaseHelper {
               ''');
   }
 
-  // Database helper methods:
-
-  Future<int> insert(Word word) async {
+  Future<int> insert(LineInDatabase word) async {
     Database db = await database;
-    int id = await db.insert(tableWords, word.toMap());
+    int id = await db.insert(tableInDatabase, word.toMap());
     return id;
   }
 
-  Future<Word> queryWord(int id) async {
+  Future<LineInDatabase> queryWord(int id) async {
     Database db = await database;
-    List<Map> maps = await db.query(tableWords,
-        columns: [columnId, columnMeal, columnSugarLevel,columnDate],
+    List<Map> maps = await db.query(tableInDatabase,
+        columns: [columnId, columnMeal, columnSugarLevel, columnDate],
         where: '$columnId = ?',
         whereArgs: [id]);
-    if (maps.length > 0) {
-      return Word.fromMap(maps.first);
-    }
+    if (maps.length > 0) return LineInDatabase.fromMap(maps.first);
     return null;
   }
-
-// TODO: queryAllWords()
-// TODO: delete(int id)
-// TODO: update(Word word)
 }

@@ -23,11 +23,11 @@ class _DemoState extends State<Demo6> {
   int count = 0;
   DateFormat dateFormat = DateFormat("dd.MM.yyyy");
   DateTime _dateTime = null;
-  DateTime now=DateTime.now();
+  DateTime now = DateTime.now();
 
   var cutOffYValue = 0.0;
   var axisStyle =
-      TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
   int numberOfRecords = 0;
 
   final List<FlSpot> dummyData1 = List.generate(1, (index) {
@@ -128,7 +128,7 @@ class _DemoState extends State<Demo6> {
                           DataCell(Text(findMinWeek(now).toString())),
                           DataCell(Text(findMaxWeek(now).toString())),
                           DataCell(Text(countAvgWeek(now).toString())),
-                        //  DataCell(Text(countAvgLastWeek().toString())),
+                          //  DataCell(Text(countAvgLastWeek().toString())),
                         ],
                       ),
                     ],
@@ -174,57 +174,59 @@ class _DemoState extends State<Demo6> {
               SizedBox(height: 15),
               if (numberOfRecords < 2) ...[
                 Text("Za mało danych"),
-              ] else if (numberOfRecords >= 2) ...[
-                LineChart(
-                  LineChartData(
-                    borderData: FlBorderData(show: false),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: List.generate(numberOfRecords, (index) {
-                         // print(this.todoList[index].levelOfSugar.toDouble());
-                          return FlSpot(index.toDouble(),
-                              this.todoList[index].levelOfSugar.toDouble());
-                        }),
-                        isCurved: true,
-                        barWidth: 3,
-                        colors: [
-                          Colors.pink[600],
-                        ],
-                      ),
-                    ],
-                    minY: 0,
-                    titlesData: FlTitlesData(
-                      bottomTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 6,
-                          getTitles: (value) {
-                            return this.todoList[value.toInt()].hour.toString();
+              ] else
+                if (numberOfRecords >= 2) ...[
+                  LineChart(
+                    LineChartData(
+                      borderData: FlBorderData(show: false),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: List.generate(numberOfRecords, (index) {
+                            // print(this.todoList[index].levelOfSugar.toDouble());
+                            return FlSpot(index.toDouble(),
+                                this.todoList[index].levelOfSugar.toDouble());
                           }),
-                      leftTitles: SideTitles(
-                        showTitles: true,
-                        getTitles: (value) {
-                          if (value == 50 ||
-                              value == 100 ||
-                              value == 150 ||
-                              value == 200) return value.toString();
-                        },
+                          isCurved: true,
+                          barWidth: 3,
+                          colors: [
+                            Colors.pink[600],
+                          ],
+                        ),
+                      ],
+                      minY: 0,
+                      titlesData: FlTitlesData(
+                        bottomTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 6,
+                            getTitles: (value) {
+                              return this.todoList[value.toInt()].hour
+                                  .toString();
+                            }),
+                        leftTitles: SideTitles(
+                          showTitles: true,
+                          getTitles: (value) {
+                            if (value == 50 ||
+                                value == 100 ||
+                                value == 150 ||
+                                value == 200) return value.toString();
+                          },
+                        ),
                       ),
-                    ),
-                    axisTitleData: FlAxisTitleData(
-                        leftTitle: AxisTitle(
+                      axisTitleData: FlAxisTitleData(
+                          leftTitle: AxisTitle(
+                              showTitle: true,
+                              titleText: 'Poziom cukru mg/dL',
+                              margin: 10,
+                              textStyle: axisStyle),
+                          bottomTitle: AxisTitle(
                             showTitle: true,
-                            titleText: 'Poziom cukru mg/dL',
                             margin: 10,
-                            textStyle: axisStyle),
-                        bottomTitle: AxisTitle(
-                          showTitle: true,
-                          margin: 10,
-                          titleText: 'Godzina',
-                          textStyle: axisStyle,
-                        )),
+                            titleText: 'Godzina',
+                            textStyle: axisStyle,
+                          )),
+                    ),
                   ),
-                ),
-              ]
+                ]
             ]),
 
             //Text("Ala ma kota"),
@@ -251,21 +253,19 @@ class _DemoState extends State<Demo6> {
     });
   }
 
-int countAvg(DateTime day)
-  {
-    int avg=0;
+  int countAvg(DateTime day) {
+    int avg = 0;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
       Future<List<Record>> todoListFuture;
       todoListFuture = databaseHelper.getTodoListFromToday(day);
     });
     avg = databaseHelper.getAverageToday();
-    setState(() {
-    });
+    setState(() {});
     return avg;
   }
-  int findMax(DateTime day)
-  {
+
+  int findMax(DateTime day) {
     int max;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -273,12 +273,11 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromToday(day);
     });
     max = databaseHelper.getMaxValue();
-    setState(() {
-    });
+    setState(() {});
     return max;
   }
-  int findMin(DateTime day)
-  {
+
+  int findMin(DateTime day) {
     int min;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -286,26 +285,24 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromToday(day);
     });
     min = databaseHelper.getMinValue();
-    setState(() {
-    });
+    setState(() {});
     return min;
   }
+
   //Dla tygodnia
-  int countAvgWeek(DateTime day)
-  {
-    int avg=0;
+  int countAvgWeek(DateTime day) {
+    int avg = 0;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
       Future<List<Record>> todoListFuture;
       todoListFuture = databaseHelper.getTodoListFromWeek(day);
     });
     avg = databaseHelper.getAverageWeek();
-    setState(() {
-    });
+    setState(() {});
     return avg;
   }
-  int findMaxWeek(DateTime day)
-  {
+
+  int findMaxWeek(DateTime day) {
     int max;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -313,12 +310,11 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromWeek(day);
     });
     max = databaseHelper.getMaxWeek();
-    setState(() {
-    });
+    setState(() {});
     return max;
   }
-  int findMinWeek(DateTime day)
-  {
+
+  int findMinWeek(DateTime day) {
     int min;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -326,30 +322,26 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromWeek(day);
     });
     min = databaseHelper.getMinWeek();
-    setState(() {
-    });
+    setState(() {});
     return min;
   }
-
 
 
 //Dla 2 tygodni
 
-  int countAvgFortnight(DateTime day)
-  {
-    int avg=0;
+  int countAvgFortnight(DateTime day) {
+    int avg = 0;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
       Future<List<Record>> todoListFuture;
       todoListFuture = databaseHelper.getTodoListFromFortnight(day);
     });
     avg = databaseHelper.getAverageWeek();
-    setState(() {
-    });
+    setState(() {});
     return avg;
   }
-  int findMaxFortnight(DateTime day)
-  {
+
+  int findMaxFortnight(DateTime day) {
     int max;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -357,12 +349,11 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromFortnight(day);
     });
     max = databaseHelper.getMaxWeek();
-    setState(() {
-    });
+    setState(() {});
     return max;
   }
-  int findMinFortnight(DateTime day)
-  {
+
+  int findMinFortnight(DateTime day) {
     int min;
     final Future<Database> dbToday = databaseHelper.initializeDatabase();
     dbToday.then((database) {
@@ -370,112 +361,7 @@ int countAvg(DateTime day)
       todoListFuture = databaseHelper.getTodoListFromFortnight(day);
     });
     min = databaseHelper.getMinWeek();
-    setState(() {
-    });
+    setState(() {});
     return min;
   }
-
-
-
-
-
-
-
-
-
-
-
-  //WEEK
- /* int findMinWeek(DateTime day)
-  {
-    int min=0;
-    int minimum;
-    DateTime nowTime=DateTime.now();
-
-    DateFormat dateFormat2=DateFormat("dd");
-    DateFormat dateFormat3=DateFormat("MM");
-    DateFormat dateFormat4=DateFormat("yyyy");
-    String dayInYear=dateFormat2.format(nowTime);
-    int day=int.parse(dayInYear);
-    String monthInYear=dateFormat3.format(nowTime);
-    String year=dateFormat4.format(nowTime);
-
-    for(int i=0;i<7;i++)
-    {
-      final Future<Database> dbWeek = databaseHelper.initializeDatabase();
-      dbWeek.then((database) {
-        Future<List<Record>> todoListFuture;
-        todoListFuture = databaseHelper.getTodoListFromWeek(now);
-        min= databaseHelper.getMinWeek();
-        print('min');
-        print(min);
-        if(i==0)
-          {
-            //print('Pierwszy element');
-            minimum=min;
-          }
-        else
-          {
-            if(min<minimum) minimum=min;
-          }
-        day--;
-        dayInYear=day.toString();
-        String allDate=dayInYear+'.'+monthInYear+'.'+year;
-        /*print("minimum");
-        print(minimum);*/
-        now=DateFormat("dd.MM.yyyy").parse(allDate);
-        //print(now);
-      });
-    }
-    setState(() {
-
-    });
-    return minimum;
-
-  }
-*/
-
-
-  /*int countAvgLastWeek()
-  {
-    int average=0;
-    DateTime nowTime=DateTime.now();
-
-    DateFormat dateFormat2=DateFormat("dd");
-    DateFormat dateFormat3=DateFormat("MM");
-    DateFormat dateFormat4=DateFormat("yyyy");
-    String dayInYear=dateFormat2.format(nowTime);
-    int day=int.parse(dayInYear);
-    String monthInYear=dateFormat3.format(nowTime);
-    String year=dateFormat4.format(nowTime);
-
-    for(int i=0;i<7;i++)
-    {
-      int avg=0;
-      final Future<Database> dbWeek = databaseHelper.initializeDatabase();
-      dbWeek.then((database) {
-        print("i");
-        print(i);
-        Future<List<Record>> todoListFuture;
-        print("Czas");
-        print(now);
-        todoListFuture = databaseHelper.getTodoListFromWeek(now);
-        avg = databaseHelper.getAverageWeek();
-        print('average');
-        average+=avg;
-        print(average);
-        day--;
-        dayInYear=day.toString();
-        String allDate=dayInYear+'.'+monthInYear+'.'+year;
-
-        now=DateFormat("dd.MM.yyyy").parse(allDate);
-        print(now);
-      });
-    }
-    setState(() {
-    });
-    print("return");
-    return average;
-  }
-*/
 }
