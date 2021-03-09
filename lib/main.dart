@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'bmiCalculator.dart';
-import 'homairCalculator.dart';
-import 'sugarUnitConverter.dart';
-import 'listOfSugarLevels.dart';
-import 'average.dart';
+import 'screen/bmiCalculator.dart';
+import 'screen/homairCalculator.dart';
+import 'screen/sugarUnitConverter.dart';
+import 'screen/listOfSugarLevels.dart';
+import 'screen/average.dart';
 
 
 void main() {

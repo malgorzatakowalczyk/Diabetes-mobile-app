@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'record.dart';
-import 'database_helper.dart';
+import '../database/record.dart';
+import '../database/database_helper.dart';
 import 'addSugarLevel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
